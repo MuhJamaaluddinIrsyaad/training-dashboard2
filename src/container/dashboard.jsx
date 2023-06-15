@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, Box } from '@chakra-ui/react'
 import Header from '../component/Header';
 import Content from '../component/Content'
 import axios from 'axios'
@@ -13,8 +13,7 @@ class dashboard extends Component {
   state = {
     postNowPlaying : [],
     postPopular : [],
-    postUpcoming : [],
-    postType : ""
+    postUpcoming : []
   }
 
   componentDidMount() {
@@ -71,13 +70,15 @@ class dashboard extends Component {
     return (
       <ChakraProvider>
       <BrowserRouter>
+      <Box bg="#e2e8f0" h="100%">
       <Header/>
       <Routes>
             <Route path="/up-coming" element={<Content data={this.state.postUpcoming} postType="Up Coming"/>}/>
             <Route path="/popular" element={<Content data={this.state.postPopular} postType="Popular"/>}/>
             <Route path="/" element={<Content data={this.state.postNowPlaying} postType="Now Playing"/>}/>
-            <Route path="/detail/:postType/:ContentId" element={<DetailContent/>}/>
+            <Route path="/detail/:ContentId" element={<DetailContent/>}/>
       </Routes>
+      </Box>
       </BrowserRouter>
       </ChakraProvider>
     )

@@ -8,44 +8,70 @@ import {
     Stack,
     CardFooter,
     Text,
-    Button
+    Button,
+    Box
   } from '@chakra-ui/react'
+  import axios from 'axios'
 
 function DetailContent() {
 
-    const {postType, ContentId} = useParams();
+    const [state, setstate] = React.useState({})
+
+    const {ContentId} = useParams();
+
+    const api_key = "19feafc002d5a11018b8d141dedf0402";
+
+    const getImage = (path) => `https://image.tmdb.org/t/p/w300/${path}`;
+
+    React.useEffect(() => {
+    
+        axios.get(`https://api.themoviedb.org/3/movie/${ContentId}`,{
+        params: {
+            api_key : api_key
+        }
+        })
+        .then((response) => {
+            //handle success
+            setstate(response.data);
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error.message);
+          })
+        
+    }, [])
 
     return (
+        <Box py={190} mx="110">
         <Card
             direction={{ base: 'column', sm: 'row' }}
             overflow='hidden'
             variant='outline'
-            m={110}
             >
             <Image
                 objectFit='cover'
                 maxW={{ base: '100%', sm: '200px' }}
-                src='https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60'
+                src={getImage(state.poster_path)}
                 alt='Caffe Latte'
             />
 
             <Stack>
                 <CardBody>
-                <Heading size='md'>The perfect latte</Heading>
+                <Heading size='md'>{state.original_title}</Heading>
 
                 <Text py='2'>
-                    Caffè latte is a coffee beverage of Italian origin made with espresso
-                    and steamed milk.
+                    {state.overview}
                 </Text>
                 </CardBody>
 
                 <CardFooter>
                 <Button variant='solid' colorScheme='blue'>
-                    Buy Latte
+                    Buy Ticket
                 </Button>
                 </CardFooter>
             </Stack>
             </Card>
+        </Box>
     )
 }
 
